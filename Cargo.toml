@@ -1,0 +1,7 @@
+[package]
+name = "rigidbody_dynamics"
+version = "0.1.0"
+authors = ["Techgeek1"]
+
+[dependencies]
+nalgebra = "*"
