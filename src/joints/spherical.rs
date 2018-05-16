@@ -1,10 +1,16 @@
 use super::Joint;
-use math::{MotionSubspace, Matrix6x6};
+use math::{UnitQuaternion, MotionSubspace, Matrix6x6};
 
 pub struct SphericalJoint {
     motion_subspace: MotionSubspace,
     s_to_p: Matrix6x6,
     p_to_s: Matrix6x6,
+}
+
+impl SphericalJoint {
+    pub fn new(q: UnitQuaternion) -> SphericalJoint {
+        let e = 
+    }
 }
 
 impl Joint for SphericalJoint {
@@ -19,4 +25,8 @@ impl Joint for SphericalJoint {
     fn p_to_s(&self) -> &Matrix6x6 {
         &self.p_to_s
     }
+}
+
+fn rbda_4_12(q: UnitQuaternion) -> Matrix6x6 {
+    
 }
