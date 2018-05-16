@@ -9,7 +9,8 @@ pub struct SphericalJoint {
 
 impl SphericalJoint {
     pub fn new(q: UnitQuaternion) -> SphericalJoint {
-        let e = 
+        //let e = 
+        unimplemented!();
     }
 }
 
@@ -28,5 +29,5 @@ impl Joint for SphericalJoint {
 }
 
 fn rbda_4_12(q: UnitQuaternion) -> Matrix6x6 {
-    
+    unimplemented!();
 }
