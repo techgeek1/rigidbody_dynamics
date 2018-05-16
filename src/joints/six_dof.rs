@@ -1,9 +1,22 @@
 use super::Joint;
+use math::{MotionSubspace, Matrix6x6};
 
-pub struct SixDof {
-
+pub struct SixDOFJoint {
+    motion_subspace: MotionSubspace,
+    s_to_p: Matrix6x6,
+    p_to_s: Matrix6x6,
 }
 
-impl Joint for SixDof {
+impl Joint for SixDOFJoint {
+    fn motion_subspace(&self) -> &MotionSubspace {
+        &self.motion_subspace
+    }
 
+    fn s_to_p(&self) -> &Matrix6x6 { 
+        &self.s_to_p
+    }
+
+    fn p_to_s(&self) -> &Matrix6x6 {
+        &self.p_to_s
+    }
 }

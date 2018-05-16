@@ -2,51 +2,63 @@ mod revolute;
 mod spherical;
 mod six_dof;
 
-pub use self::revolute::Revolute;
-pub use self::spherical::Spherical;
-pub use self::six_dof::SixDof;
+pub use self::revolute::{RevoluteJoint, RevoluteAxis};
+pub use self::spherical::SphericalJoint;
+pub use self::six_dof::SixDOFJoint;
 
 use math::{Vector3};
 use math::{MotionSubspace, Matrix3x3, Matrix6x6};
 
 pub trait Joint {
-    fn s_to_p() -> Matrix6x6;
+    fn motion_subspace(&self) -> &MotionSubspace;
 
-    fn p_to_s() -> Matrix6x6;
+    fn s_to_p(&self) -> &Matrix6x6;
 
-    fn motion_subspace() -> MotionSubspace;
+    fn p_to_s(&self) -> &Matrix6x6;
 }
 
-fn rx(theta: f32) -> Matrix3x3 {
-    let cos = theta.cos();
-    let sin = theta.sin();
+// Joint functions
 
-    Matrix3x3::new(
-        1.0, 0.0, 0.0,
-        0.0,   c,   s,
-        0.0,  -c,   c
+// TODO: Fix this horrible hack and implement some way to set blocks on a Matrix6x6
+fn rotx(theta: f32) -> Matrix6x6 {
+    let c = theta.cos();
+    let s = theta.sin();
+
+    Matrix6x6::new(
+        1.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+        0.0,   c,   s, 0.0, 0.0, 0.0,
+        0.0,  -c,   c, 0.0, 0.0, 0.0,
+        0.0, 0.0, 0.0, 1.0, 0.0, 0.0,
+        0.0, 0.0, 0.0, 0.0,   c,   s,
+        0.0, 0.0, 0.0, 0.0,  -c,   c
     )
 }
 
-fn ry(theta: f32) -> Matrix3x3 {
-    let cos = theta.cos();
-    let sin = theta.sin();
+fn roty(theta: f32) -> Matrix6x6 {
+    let c = theta.cos();
+    let s = theta.sin();
 
-    Matrix3x3::new(
-          c, 0.0,  -s,
-        0.0, 1.0, 0.0,
-          s, 0.0,   c
+    Matrix6x6::new(
+          c, 0.0,  -s, 0.0, 0.0, 0.0,
+        0.0, 1.0, 0.0, 0.0, 0.0, 0.0,
+          s, 0.0,   c, 0.0, 0.0, 0.0,
+        0.0, 0.0, 0.0,   c, 0.0,  -s,
+        0.0, 0.0, 0.0, 0.0, 1.0, 0.0,
+        0.0, 0.0, 0.0,   s, 0.0,   c
     )
 }
 
-fn rz(theta: f32) -> Matrix3x3 {
-    let cos = theta.cos();
-    let sin = theta.sin();
+fn rotz(theta: f32) -> Matrix6x6 {
+    let c = theta.cos();
+    let s = theta.sin();
 
-    Matrix3x3::new(
-          c,   s, 0.0,
-         -s,   c, 0.0,
-        0.0, 0.0, 0.0
+    Matrix6x6::new(
+          c,   s, 0.0, 0.0, 0.0, 0.0,
+         -s,   c, 0.0, 0.0, 0.0, 0.0,
+        0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+        0.0, 0.0, 0.0,   c,   s, 0.0,
+        0.0, 0.0, 0.0,  -s,   c, 0.0,
+        0.0, 0.0, 0.0, 0.0, 0.0, 0.0
     )
 }
 
