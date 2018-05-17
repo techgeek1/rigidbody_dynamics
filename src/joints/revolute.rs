@@ -1,5 +1,6 @@
 use super::Joint;
-use math::{MotionSubspace, Matrix6x6};
+use math;
+use math::*;
 
 pub enum RevoluteAxis {
     X,
@@ -22,9 +23,15 @@ impl RevoluteJoint {
             RevoluteAxis::Z => rotz(0.0)   
         };
 
+        let mut motion_subspace = match axis {
+            RevoluteAxis::X => MotionSubspace::from_column_slice(6, 1, &[1.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
+            RevoluteAxis::Y => MotionSubspace::from_column_slice(6, 1, &[0.0, 1.0, 0.0, 0.0, 0.0, 0.0]),
+            RevoluteAxis::Z => MotionSubspace::from_column_slice(6, 1, &[0.0, 0.0, 1.0, 0.0, 0.0, 0.0])
+        };
+
         RevoluteJoint {
             axis: axis,
-            motion_subspace: MotionSubspace::from_element(6, 1, 0.0),
+            motion_subspace: motion_subspace,
             s_to_p: ps.transpose(),
             p_to_s: ps
         }
@@ -48,41 +55,44 @@ impl Joint for RevoluteJoint {
 fn rotx(theta: f32) -> Matrix6x6 {
     let c = theta.cos();
     let s = theta.sin();
+    let e = Matrix3x3::new(
+        1.0, 0.0, 0.0,
+        0.0,   c,   s,
+        0.0,  -c,   c
+    );
 
-    Matrix6x6::new(
-        1.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-        0.0,   c,   s, 0.0, 0.0, 0.0,
-        0.0,  -c,   c, 0.0, 0.0, 0.0,
-        0.0, 0.0, 0.0, 1.0, 0.0, 0.0,
-        0.0, 0.0, 0.0, 0.0,   c,   s,
-        0.0, 0.0, 0.0, 0.0,  -c,   c
+    math::make_block_matrix(
+        &e, &Matrix3x3::zeros(), 
+        &Matrix3x3::zeros(), &e
     )
 }
 
 fn roty(theta: f32) -> Matrix6x6 {
     let c = theta.cos();
     let s = theta.sin();
+    let e = Matrix3x3::new(
+          c, 0.0,  -s,
+        0.0, 1.0, 0.0,
+        s, 0.0,   c
+    );
 
-    Matrix6x6::new(
-          c, 0.0,  -s, 0.0, 0.0, 0.0,
-        0.0, 1.0, 0.0, 0.0, 0.0, 0.0,
-          s, 0.0,   c, 0.0, 0.0, 0.0,
-        0.0, 0.0, 0.0,   c, 0.0,  -s,
-        0.0, 0.0, 0.0, 0.0, 1.0, 0.0,
-        0.0, 0.0, 0.0,   s, 0.0,   c
+    math::make_block_matrix(
+        &e, &Matrix3x3::zeros(), 
+        &Matrix3x3::zeros(), &e
     )
 }
 
 fn rotz(theta: f32) -> Matrix6x6 {
     let c = theta.cos();
     let s = theta.sin();
+    let e = Matrix3x3::new(
+          c,   s, 0.0,
+        -s,   c, 0.0,
+        0.0, 0.0, 0.0
+    );
 
-    Matrix6x6::new(
-          c,   s, 0.0, 0.0, 0.0, 0.0,
-         -s,   c, 0.0, 0.0, 0.0, 0.0,
-        0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-        0.0, 0.0, 0.0,   c,   s, 0.0,
-        0.0, 0.0, 0.0,  -s,   c, 0.0,
-        0.0, 0.0, 0.0, 0.0, 0.0, 0.0
+    math::make_block_matrix(
+        &e, &Matrix3x3::zeros(), 
+        &Matrix3x3::zeros(), &e
     )
 }

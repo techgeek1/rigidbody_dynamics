@@ -5,11 +5,11 @@ mod spatial_vector;
 
 
 pub type Vector3 = nalgebra::Vector3<f32>;
+pub type Vector4 = nalgebra::Vector4<f32>;
 pub type SpatialVector = nalgebra::Vector6<f32>;
+pub type Quaternion = nalgebra::Quaternion<f32>;
 pub type UnitQuaternion = nalgebra::UnitQuaternion<f32>;
-
 pub type MotionSubspace = nalgebra::DMatrix<f32>;
-
 pub type Matrix3x3 = nalgebra::Matrix3<f32>;
 pub type Matrix6x6 = nalgebra::Matrix6<f32>;
 
