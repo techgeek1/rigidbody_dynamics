@@ -6,8 +6,7 @@ pub use self::revolute::{RevoluteJoint, RevoluteAxis};
 pub use self::spherical::SphericalJoint;
 pub use self::six_dof::SixDOFJoint;
 
-use math::{Vector3};
-use math::{MotionSubspace, Matrix3x3, Matrix6x6};
+use math::{MotionSubspace, Matrix6x6};
 
 pub trait Joint {
     fn motion_subspace(&self) -> &MotionSubspace;

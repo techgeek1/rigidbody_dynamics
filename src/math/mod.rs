@@ -1,8 +1,7 @@
 use nalgebra;
 use nalgebra::{MatrixSlice3x1, Vector6};
 
-mod spatial_vector;
-
+mod spatial_transform;
 
 pub type Vector3 = nalgebra::Vector3<f32>;
 pub type Vector4 = nalgebra::Vector4<f32>;
@@ -13,7 +12,20 @@ pub type MotionSubspace = nalgebra::DMatrix<f32>;
 pub type Matrix3x3 = nalgebra::Matrix3<f32>;
 pub type Matrix6x6 = nalgebra::Matrix6<f32>;
 
-pub use self::spatial_vector::{SpatialVectorF, SpatialVectorM};
+pub use self::spatial_transform::SpatialTransform;
+
+pub trait SpatialVectorHelper {
+    fn from_parts(m: Vector3, mO: Vector3) -> SpatialVector;
+}
+
+impl SpatialVectorHelper for SpatialVector {
+    fn from_parts(m: Vector3, mO: Vector3) -> SpatialVector {
+        SpatialVector::new(
+            m.x, m.y, m.z,
+            mO.x, mO.y, mO.z
+        )
+    }
+}
 
 pub fn make_block_matrix(b00: &Matrix3x3, b01: &Matrix3x3, b10: &Matrix3x3, b11: &Matrix3x3) -> Matrix6x6 {
     let c0 = concat_columns(&b00.fixed_slice(0, 0), &b10.fixed_slice(0, 0));
