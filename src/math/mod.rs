@@ -33,3 +33,30 @@ fn concat_columns(c0: &MatrixSlice3x1<f32>, c1: &MatrixSlice3x1<f32>) -> Vector6
 
     Vector6::from_iterator(result.into_iter())
 }
+
+pub fn r_cross(r: Vector3) -> Matrix3x3 {
+    Matrix3x3::new(
+         0.0, -r.z,  r.y,
+         r.z,  0.0, -r.x,
+        -r.y,  r.x,  0.0
+    )
+}
+
+pub fn rbda_4_12(unit_q: UnitQuaternion) -> Matrix3x3 {
+    let q = unit_q.quaternion();
+
+    let p0 = q.coords.x;
+    let p1 = q.coords.y;
+    let p2 = q.coords.z;
+    let p3 = q.coords.w;
+    let p0sqr = p0.powf(2.0);
+    let p1sqr = p1.powf(2.0);
+    let p2sqr = p2.powf(2.0);
+    let p3sqr = p3.powf(2.0);
+
+    Matrix3x3::new(
+        p0sqr + p1sqr - 0.5, p1 * p2 + p0 * p3, p1 * p3 - p0 * p2,
+        p1 * p2 - p0 * p3, p0sqr + p2sqr - 0.5, p2 * p3 + p0 * p1,
+        p1 * p3 + p0 * p2, p2 * p3 - p0 * p1, p0sqr + p3sqr - 0.5
+    )
+}

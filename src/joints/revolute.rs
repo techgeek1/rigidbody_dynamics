@@ -16,11 +16,17 @@ pub struct RevoluteJoint {
 }
 
 impl RevoluteJoint {
-    fn new(axis: RevoluteAxis) -> RevoluteJoint {
+    fn new(rotation: Vector3, axis: RevoluteAxis) -> RevoluteJoint {
+        let angle = match axis {
+            RevoluteAxis::X => rotation.x,
+            RevoluteAxis::Y => rotation.y,
+            RevoluteAxis::Z => rotation.z
+        };
+
         let ps = match axis {
-            RevoluteAxis::X => rotx(0.0),
-            RevoluteAxis::Y => roty(0.0),
-            RevoluteAxis::Z => rotz(0.0)   
+            RevoluteAxis::X => rotx(angle),
+            RevoluteAxis::Y => roty(angle),
+            RevoluteAxis::Z => rotz(angle)   
         };
 
         let mut motion_subspace = match axis {
