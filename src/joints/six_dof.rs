@@ -11,8 +11,8 @@ impl SixDOFJoint {
     pub fn new(pivot: Vector3, q: UnitQuaternion) -> SixDOFJoint {
         let motion_subspace = MotionSubspace::from_diagonal_element(6, 6, 1.0);
         let e = rbda_4_12(q);
-        let neg_er = -e * r_cross(pivot);
-        let ps = make_block_matrix(&e, &neg_er, &Matrix3x3::zeros(), &Matrix3x3::repeat(1.0));// TODO: Double check this
+        let neg_er = (-e * pivot).to_cross_matrix();
+        let ps = Matrix6x6::from_block(&e, &neg_er, &Matrix3x3::zeros(), &Matrix3x3::repeat(1.0));// TODO: Double check this
 
         SixDOFJoint {
             motion_subspace: motion_subspace,

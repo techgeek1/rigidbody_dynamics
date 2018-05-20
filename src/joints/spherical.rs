@@ -21,7 +21,7 @@ impl SphericalJoint {
         );
 
         let e = rbda_4_12(q);
-        let ps = make_block_matrix(&e, &Matrix3x3::zeros(), &Matrix3x3::zeros(), &e);
+        let ps = Matrix6x6::from_block(&e, &Matrix3x3::zeros(), &Matrix3x3::zeros(), &e);
 
         SphericalJoint {
             motion_subspace: motion_subspace,

@@ -1,5 +1,4 @@
 use super::Joint;
-use math;
 use math::*;
 
 pub enum RevoluteAxis {
@@ -16,7 +15,7 @@ pub struct RevoluteJoint {
 }
 
 impl RevoluteJoint {
-    fn new(rotation: Vector3, axis: RevoluteAxis) -> RevoluteJoint {
+    pub fn new(rotation: Vector3, axis: RevoluteAxis) -> RevoluteJoint {
         let angle = match axis {
             RevoluteAxis::X => rotation.x,
             RevoluteAxis::Y => rotation.y,
@@ -29,7 +28,7 @@ impl RevoluteJoint {
             RevoluteAxis::Z => rotz(angle)   
         };
 
-        let mut motion_subspace = match axis {
+        let motion_subspace = match axis {
             RevoluteAxis::X => MotionSubspace::from_column_slice(6, 1, &[1.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
             RevoluteAxis::Y => MotionSubspace::from_column_slice(6, 1, &[0.0, 1.0, 0.0, 0.0, 0.0, 0.0]),
             RevoluteAxis::Z => MotionSubspace::from_column_slice(6, 1, &[0.0, 0.0, 1.0, 0.0, 0.0, 0.0])
@@ -67,7 +66,7 @@ fn rotx(theta: f32) -> Matrix6x6 {
         0.0,  -c,   c
     );
 
-    math::make_block_matrix(
+    Matrix6x6::from_block(
         &e, &Matrix3x3::zeros(), 
         &Matrix3x3::zeros(), &e
     )
@@ -82,7 +81,7 @@ fn roty(theta: f32) -> Matrix6x6 {
         s, 0.0,   c
     );
 
-    math::make_block_matrix(
+    Matrix6x6::from_block(
         &e, &Matrix3x3::zeros(), 
         &Matrix3x3::zeros(), &e
     )
@@ -97,7 +96,7 @@ fn rotz(theta: f32) -> Matrix6x6 {
         0.0, 0.0, 0.0
     );
 
-    math::make_block_matrix(
+    Matrix6x6::from_block(
         &e, &Matrix3x3::zeros(), 
         &Matrix3x3::zeros(), &e
     )

@@ -1,3 +1,4 @@
+use std::ops::{Mul, MulAssign};
 use math::*;
 
 pub struct SpatialTransform {
@@ -45,5 +46,24 @@ impl SpatialTransform {
             etf[1],
             etf[2]
         )
+    }
+
+    pub fn transpose(&self) -> SpatialTransform {
+        SpatialTransform::new(self.e.transpose(), -self.r)
+    }
+}
+
+impl Mul for SpatialTransform {
+    type Output = SpatialTransform;
+
+    fn mul(self, other: SpatialTransform) -> SpatialTransform {
+        SpatialTransform::new(self.e * other.e, self.r + self.e.transpose() * other.r)
+    }
+}
+
+impl MulAssign for SpatialTransform {
+    fn mul_assign(&mut self, other: SpatialTransform) {
+        self.r = self.r + self.e.transpose() * other.r;
+        self.e *= other.e;
     }
 }
